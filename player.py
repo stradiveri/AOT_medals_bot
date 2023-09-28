@@ -10,7 +10,6 @@ class Player:
         self.gold_aot_medals_amount = 0
         self.silver_boxes_pos = 0
         self.gold_boxes_pos = 0
-        self.silver_boxes_pos = 0
         self.gold_boxes_amount = 0
         self.silver_boxes_amount = 0
         self.medals_to_use = []
