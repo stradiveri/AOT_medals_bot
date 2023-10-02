@@ -67,7 +67,6 @@ def packetLogger(Player):
                         Player.medals_to_use.append([int(item["position"]), int(item["quantity"])])
         else:
             sleep(0.01)
-
     Player.api.close()
 
 def getRandomDelay(min,max):
@@ -86,6 +85,7 @@ if __name__ == "__main__":
     players = []
     players_names = []
 
+    # this if statement is there in case you are using a config to load characters beforehand
     if cl.user_settings.characters != "":
         splitCharactes=cl.user_settings.characters.split(",")
 
@@ -117,6 +117,8 @@ if __name__ == "__main__":
         print(emoji.emojize(":fire:Leave empty and press Enter, to stop:stop_sign:"))
         print(emoji.emojize(":pregnant_man:Type cepik to select all:monkey:"))
         print("")
+
+        # while loop that runs until you press leave empty and press enter or until you use the keyword "cepik" to select all characters
         while True:
             print(emoji.emojize(":keyboard:Type name(or index:input_numbers:) of your character: "), end="")
             index = input()
@@ -162,9 +164,10 @@ if __name__ == "__main__":
     
     # main part of the code, made into a function to allow threading
     def do(pl):
-        pl.api.query_player_information() # type: ignore
+        # query to get player id and position as seen in the packetlogger function
+        pl.api.query_player_information()
         time.sleep(0.1)
-        pl.api.query_inventory() # type: ignore
+        pl.api.query_inventory()
         time.sleep(0.1)
         pl.api.send_packet("n_run 18")
         time.sleep(getRandomDelay(0.5,1.5))
@@ -186,6 +189,8 @@ if __name__ == "__main__":
         # calculate for how many boxes you have medlas
         gold_medals_boxes = int(pl.gold_aot_medals_amount/8)
         silver_medals_boxes = int(pl.silver_aot_medals_amount/24)
+        
+        # if you have enough medals for atleast one box, this gets executed
         if (gold_medals_boxes + silver_medals_boxes) > 0:
             select_target(players[i], int(cl.npcs.steve_stuff_id), 2)
             time.sleep(getRandomDelay(0.5,1.5))
@@ -228,6 +233,8 @@ if __name__ == "__main__":
         
         # thanks to Zanou for shop_end 1 packet to close the window after
         pl.api.recv_packet("shop_end 1")
+
+        # query to see how many boxes you got now
         pl.api.query_inventory()
         time.sleep(0.2)
         
@@ -239,7 +246,9 @@ if __name__ == "__main__":
             pl.api.send_packet("u_i 1 "+str(pl.id)+" 1 "+str(pl.silver_boxes_pos)+" 0 0")
             time.sleep(getRandomDelay(0.75,1))
 
+        # medals_to_use variable gets set back to [] to avoid having duplicites
         pl.medals_to_use = []
+        # query to see how many medals you got, could be done in a better way withouth needing to call invetory query again
         pl.api.query_inventory()
         time.sleep(0.1)
 
@@ -260,10 +269,10 @@ if __name__ == "__main__":
         sleep_for = getRandomDelay(2.5,25)
         time.sleep(sleep_for)
     
-    #checkin if all the threads are finishhed
+    #checking if all the threads are finishhed
     for thread in threads_list:
         thread.join()
-        
+    
     print("")
     print(emoji.emojize(":OK_hand::OK_hand::OK_hand::OK_hand::OK_hand::OK_hand::OK_hand::OK_hand::OK_hand::OK_hand::OK_hand::OK_hand::OK_hand::OK_hand::OK_hand::OK_hand::OK_hand::OK_hand::OK_hand::OK_hand::OK_hand::OK_hand::OK_hand:"))
     print(emoji.emojize(":OK_hand:BOT FINISHED YOU CAN CLOSE THE WINDOW NOW :OK_hand:"))
